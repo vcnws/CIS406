@@ -1,6 +1,7 @@
 //Christopher Crawford - CIS406 - Temperature Conversion
 
 package temperatureConversion;
+import java.text.NumberFormat;
 import java.util.*;
 
 public class TemperatureConversion {
@@ -12,14 +13,14 @@ public class TemperatureConversion {
 			System.out.println("Welcome to the Temperature Converter\n");
 			
 			System.out.print("Enter a temperature in Fahrenheit: ");
-			var fahrenheit = scanner.nextInt();
+			var fahrenheit = Double.parseDouble(scanner.nextLine());
 			
-			System.out.println(String.format("Degrees in Celsius: %1d\n", GetCelsius(fahrenheit)));
+			System.out.println("Degrees in Celsius: " + convertToCelsiusString(fahrenheit) + "\n");
 			
 			System.out.print("Enter a temperature in Celsius: ");
-			var celsius = scanner.nextInt();
+			var celsius = Double.parseDouble(scanner.nextLine());
 			
-			System.out.println(String.format("Degrees in Celsius: %1d\n", GetFahrenheit(celsius)));
+			System.out.println("Degrees in Celsius: " + convertToFahrenheitString(celsius) + "\n");
 			
 			System.out.println("Thanks for playing!!");
 			
@@ -31,11 +32,17 @@ public class TemperatureConversion {
 
 	}
 	
-	private static int GetFahrenheit(int input) {
-		return Math.round(input * (9/5)) + 32;
+	private static String convertToFahrenheitString(double input) {
+		return ConvertDoubleToString((input * 9/5) + 32);
 	}
 	
-	private static int GetCelsius(int input) {
-		return (input - 32) * Math.round(5/9);
+	private static String convertToCelsiusString(double input) {
+		return ConvertDoubleToString((input - 32) * 5 / 9);
+	}
+	
+	private static String ConvertDoubleToString(double input) {
+		NumberFormat num = NumberFormat.getInstance();
+		num.setMaximumFractionDigits(2);
+		return num.format(input);
 	}
 }
