@@ -20,7 +20,7 @@ public class TravelTimeCalculator {
             int hours = totalMinutesTravelled / 60;
             int minutes = totalMinutesTravelled % 60;
 
-            System.out.println("\nEstimated travel time   ");
+            System.out.println("\nEstimated travel time     ");
             System.out.println("--------------------------");
             System.out.println("Hours:     " + hours);
             System.out.println("Minutes:   " + minutes);

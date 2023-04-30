@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author chris
- *
- */
-module travelTimeCalculator {
-}
