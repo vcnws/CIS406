@@ -1,4 +1,4 @@
-//Christopher Crawford - CIS406 - Course Project Phase 1
+//Christopher Crawford - CIS406 - Course Project Phase 2
 package orderEntryPhase2;
 import java.util.*;
 
@@ -21,27 +21,32 @@ public class OrderEntryPhase2 {
             System.out.print("Enter a quantity ordered:               ");
             int quantity = Integer.parseInt(scanner.nextLine());
 
-            double lineSubtotal = itemPrice * quantity;
+            double grossAmt = itemPrice * quantity;
 
-            System.out.print("Enter the total tax for the item:       ");
+            System.out.print("Enter the tax percentage:               ");
             double tax = Double.parseDouble(scanner.nextLine());
 
-            double lineTax = lineSubtotal * (tax / 100);
+            double lineTax = grossAmt * (tax / 100);
 
-            System.out.print("Enter the total discount for the item:  ");
+            System.out.print("Enter the discount percentage:          ");
             double discount = Double.parseDouble(scanner.nextLine());
 
-            double netAmt = lineSubtotal + lineTax - discount;
+            double lineDiscount = grossAmt * (discount / 100);
+
+            double netAmt = grossAmt + lineTax - lineDiscount;
 
             System.out.println("\nOrder Details");
-            var headers = new String[] {"Item No.","Description","Price","Qty","Tax","Discount","Net Amount"};
+
+            var headers = new String[] {"Item No.","Description","Price","Qty", "Gross Amt", "Tax Amt","Disc Amt","Net Amt"};
+
             var values = new String[] {itemNumber, itemDesc, StringHelper.GetString(itemPrice),
-                    String.valueOf(quantity), tax + "%", StringHelper.GetString(discount),StringHelper.GetString(netAmt)};
+                    String.valueOf(quantity), StringHelper.GetString(grossAmt), StringHelper.GetString(lineTax),
+                    "-" + StringHelper.GetString(lineDiscount), StringHelper.GetString(netAmt)};
 
             StringHelper.PadStrings(headers, values);
 
             System.out.println(String.join("", headers));
-            System.out.println("-----------------------------------------------------------------------------");
+            System.out.println("--------------------------------------------------------------------------------------------------------");
             System.out.println(String.join("",  values));
 
         } catch (Exception ex) {
