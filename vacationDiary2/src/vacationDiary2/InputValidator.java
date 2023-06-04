@@ -1,10 +1,9 @@
 //Christopher Crawford - CIS406 - Vacation Diary 2
 
 package vacationDiary2;
-
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Scanner;
-
-import static java.lang.System.out;
 
 public class InputValidator {
     private final StringHelper _sh;
@@ -15,42 +14,60 @@ public class InputValidator {
         _sc = sc;
     }
 
-    public double GetDoubleValue(String prompt, int pad, double min, double max){
+    public String GetDateString(String input) {
+        try{
+            //check for integer value
+            int dateInteger = Integer.parseInt(input);
+
+            //check for valid length
+            if (input.length() < 8)
+                throw new Exception();
+
+            String dateString = input.substring(0,2) + "/" + input.substring(2,4) + "/" + input.substring(4, 8);
+
+            //validate proper date format
+            Date d = new Date(dateString);
+            return dateString;
+        } catch (Exception ex){
+            return "";
+        }
+    }
+
+    public int GetDays(){
         while (true){
-            out.print(_sh.PadString(prompt, pad));
+            System.out.print(_sh.PadString("Enter Number of Days Visited:",55));
             try{
-                var dbl = Double.parseDouble(_sc.nextLine());
-                if (dbl < min || dbl > max)
-                    throw new Exception("Outside range.");
-                return Double.parseDouble(_sc.nextLine());
+                var days = Integer.parseInt(_sc.nextLine());
+                if (days < 1 || days > 30)
+                    throw new Exception();
+
+                return days;
             } catch (Exception ex){
-                out.println("Invalid entry");
+                System.out.println("Days must be between 1 and 30");
             }
         }
     }
 
-    public int GetIntValue(String prompt, int pad){
+    public String GetMode(){
+        String[] allowedValues = {"car","plane","ship","train","bus"};
         while (true){
-            out.print(_sh.PadString(prompt, pad));
-            try{
-                return Integer.parseInt(_sc.nextLine());
-            } catch (Exception ex){
-                out.println("Invalid entry");
-            }
+            System.out.print(_sh.PadString("Enter Mode of Travel (car,plane,ship,train,bus):", 55));
+            var mode = _sc.nextLine();
+
+            if (Arrays.stream(allowedValues).anyMatch(s -> s.equalsIgnoreCase(mode)))
+                return mode;
+
+            System.out.println("Enter a valid mode of travel.");
         }
     }
 
-    public String GetStringValue(String prompt, int pad){
-        while (true){
-            out.print(_sh.PadString(prompt, pad));
-            try{
-                var val = _sc.nextLine();
-                if (val.length() == 0)
-                    throw new Exception("Invalid entry");
-                return val;
-            } catch (Exception ex){
-                out.println("Invalid entry");
-            }
-        }
+    public String GetLimitedString(String prompt){
+        System.out.print(_sh.PadString(prompt, 55));
+        String input = _sc.nextLine();
+        if (input.length() < 15)
+            input = _sh.PadString(input, 15);
+        if (input.length() > 15)
+            input = input.substring(0, 15);
+        return input;
     }
 }

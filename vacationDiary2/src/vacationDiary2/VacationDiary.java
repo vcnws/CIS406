@@ -2,22 +2,20 @@
 
 package vacationDiary2;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.Scanner;
-import java.util.function.Predicate;
 
 public class VacationDiary {
     static StringHelper _sh;
     static Scanner _sc;
     static StringBuilder _sb;
+    static InputValidator _iv;
 
     public static void main(String[] args) {
         _sc = new Scanner(System.in);
         _sh = new StringHelper();
         _sb = new StringBuilder();
+        _iv = new InputValidator(_sh,_sc);
+        boolean linesAdded = false;
 
         BuildHeader();
 
@@ -33,23 +31,30 @@ public class VacationDiary {
 
                 if (input.equalsIgnoreCase("end")) break;
 
-                dateString = GetDateString(input);
+                dateString = _iv.GetDateString(input);
+                if (dateString.length() <= 0)
+                    System.out.println("Invalid date format. Please re-enter.");
             }
             if (input.equalsIgnoreCase("end")) break;
 
-            String city = GetCity();
-            String country = GetCountry();
-            int days = GetDays();
-
-            System.out.print(_sh.PadString("Enter Mode of Travel (car,plane,ship,train,bus):", 55));
-            String mode = GetMode();
+            String city = _iv.GetLimitedString("Enter City Visited:");
+            String country = _iv.GetLimitedString("Enter Country Visited:");
+            int days = _iv.GetDays();
+            String mode = _iv.GetMode();
 
             AppendLine(new String[]{dateString, city, country, String.valueOf(days), mode});
+            linesAdded = true;
+            System.out.println();
         }
 
         _sb.append("==============================================================================\n");
-        System.out.println("\n" + _sb);
+        if (linesAdded)
+            System.out.println("\n" + _sb);
         System.out.println("\nThanks for playing!");
+
+        _sc.close();
+        _sh = null;
+        _iv = null;
     }
 
     private static void BuildHeader(){
@@ -61,78 +66,10 @@ public class VacationDiary {
     }
 
     private static void AppendLine(String[] inputs){
-        int[] pads = {16,16,20,13,13};
+        int[] pads = {16,20,20,10,12};
         for(var i = 0; i < inputs.length; i++){
             _sb.append(_sh.PadString(inputs[i], pads[i]));
         }
         _sb.append("\n");
-    }
-
-    private static String GetDateString(String input) {
-        try{
-            //check for integer value
-            int dateInteger = Integer.parseInt(input);
-
-            //check for valid length
-            if (input.length() < 8)
-                throw new Exception();
-
-            String dateString = input.substring(0,2) + "/" + input.substring(2,2) + "/" + input.substring(4, 4);
-            Date d = new Date(dateString);
-            return dateString;
-        } catch (Exception ex){
-            return "";
-        }
-    }
-
-    private static int GetDays(){
-        while (true){
-            System.out.print(_sh.PadString("Enter Number of Days Visited:",55));
-            try{
-                var days = Integer.parseInt(_sc.nextLine());
-                if (days < 1 || days > 30)
-                    throw new Exception();
-
-                return days;
-            } catch (Exception ex){
-                System.out.println("Days must be between 1 and 30");
-            }
-        }
-    }
-
-    private static String GetMode(){
-        String[] allowedValues = {"car","plane","ship","train","bus"};
-        while (true){
-            var mode = _sc.nextLine();
-
-            if (Arrays.stream(allowedValues).anyMatch(s -> s.equalsIgnoreCase(mode)))
-                return mode;
-
-            System.out.println("Enter a valid mode of travel.");
-        }
-    }
-
-    private static String GetCity(){
-        while (true){
-            System.out.print(_sh.PadString("Enter City Visited:", 55));
-            String city = _sc.nextLine();
-            if (city.length() < 15){
-                System.out.println("Enter a valid city.");
-                continue;
-            }
-            return city.substring(0,30);
-        }
-    }
-
-    private static String GetCountry(){
-        while (true){
-            System.out.print(_sh.PadString("Enter Country Visited:", 55));
-            String country = _sc.nextLine();
-            if (country.length() < 15){
-                System.out.println("Enter a valid city.");
-                continue;
-            }
-            return country.substring(0,30);
-        }
     }
 }
